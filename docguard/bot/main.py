@@ -26,14 +26,17 @@ async def _run_webhook(settings: Settings, bot: Bot, dp: Dispatcher) -> None:
         raise ConfigError("WEBHOOK_SECRET webhook rejimi uchun kerak")
     if not base_url.startswith("https://"):
         raise ConfigError("WEBHOOK_BASE_URL HTTPS bilan boshlanishi kerak")
-    path = settings.webhook_path
-    if not path.startswith("/"):
+    path = "/" + settings.webhook_path.strip("/")
+    if path == "/":
+        raise ConfigError("WEBHOOK_PATH bo'sh bo'lmasligi kerak")
+    if not settings.webhook_path.startswith("/"):
         raise ConfigError("WEBHOOK_PATH / bilan boshlanishi kerak")
 
     app = web.Application()
     webhook = SimpleRequestHandler(dispatcher=dp, bot=bot,
                                    secret_token=settings.webhook_secret)
     webhook.register(app, path=path)
+    app.router.add_post(f"{path}/", webhook.handle)
     setup_application(app, dp, bot=bot)
 
     app_runner = web.AppRunner(app)
