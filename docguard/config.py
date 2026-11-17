@@ -42,6 +42,11 @@ class Settings:
     max_workers: int = 2
     visible_default: bool = False
     timezone: str = "Asia/Tashkent"
+    webhook_base_url: str | None = None
+    webhook_path: str = "/telegram/webhook"
+    webhook_secret: str | None = None
+    webhook_host: str = "127.0.0.1"
+    webhook_port: int = 8080
 
     @classmethod
     def from_env(cls, *, require_token: bool = False) -> Settings:
@@ -72,6 +77,11 @@ class Settings:
             max_workers=max(1, _int("MAX_WORKERS", 2)),
             visible_default=_bool("VISIBLE_WATERMARK_DEFAULT", False),
             timezone=os.environ.get("TIMEZONE", "Asia/Tashkent"),
+            webhook_base_url=os.environ.get("WEBHOOK_BASE_URL") or None,
+            webhook_path=os.environ.get("WEBHOOK_PATH", "/telegram/webhook"),
+            webhook_secret=os.environ.get("WEBHOOK_SECRET") or None,
+            webhook_host=os.environ.get("WEBHOOK_HOST", "127.0.0.1"),
+            webhook_port=_int("WEBHOOK_PORT", 8080),
         )
 
     def watermark_params(self) -> WatermarkParams:

@@ -16,6 +16,9 @@ cp .env.example .env
 python -m docguard.bot
 ```
 
+For webhook mode, set `WEBHOOK_BASE_URL` and `WEBHOOK_SECRET` to your public HTTPS URL and a random secret, then run the same command. The bot listens on
+`WEBHOOK_HOST:WEBHOOK_PORT` (by default `127.0.0.1:8080`) and receives updates at `WEBHOOK_PATH`.
+
 Tests: `python -m unittest discover -s tests -t .` (or `pytest`).
 
 ## Bot usage
@@ -100,6 +103,11 @@ size, the decoder resizes it back to the canonical size and tries again.
 | `MAX_FILE_MB` | `20` | Telegram Bot API download limit |
 | `MAX_WORKERS` | `2` | images processed concurrently |
 | `VISIBLE_WATERMARK_DEFAULT` | `false` | default for the visible text overlay |
+| `WEBHOOK_BASE_URL` | empty | public HTTPS URL; enables webhook mode |
+| `WEBHOOK_PATH` | `/telegram/webhook` | webhook endpoint path |
+| `WEBHOOK_SECRET` | empty | secret header token for Telegram webhook requests |
+| `WEBHOOK_HOST` | `127.0.0.1` | local webhook listener host |
+| `WEBHOOK_PORT` | `8080` | local webhook listener port |
 
 ## Limitations and security
 
